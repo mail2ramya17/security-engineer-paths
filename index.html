@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Security Engineer Paths × Layers (V1 → V8)</title>
+<meta name="description" content="Interactive roadmap of five security engineering paths across eight maturity layers — by Ramya Kanderi.">
+<style>
+  :root { --bg:#0d111a; --panel:#161c28; --muted:#7c8597; --text:#e6e9ef; --line:#2a3242; }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--text); font:15px/1.45 system-ui,-apple-system,"Segoe UI",sans-serif; }
+  .wrap { max-width:1280px; margin:0 auto; padding:28px 24px 40px; }
+  h1 { margin:0; font-size:28px; }
+  .sub { color:var(--muted); margin:4px 0 20px; }
+  .layout { display:grid; grid-template-columns:1fr 260px; gap:20px; }
+  .grid { display:grid; grid-template-columns:140px repeat(5,1fr); gap:8px; }
+  .head { text-align:center; font-weight:700; padding:7px 4px; border-radius:6px; border:1px solid; font-size:14px; }
+  .layer, .cell { border-radius:8px; padding:10px; min-height:62px; border:1px solid var(--line); cursor:pointer; transition:all .15s; }
+  .layer { background:#202634; }
+  .layer b { display:block; font-size:22px; color:#9aa3b5; line-height:1; }
+  .layer span { font-size:12px; color:var(--muted); }
+  .cell { font-size:12.5px; color:#6b7385; background:#131826; }
+  .cell.on, .layer.on { color:var(--text); border-width:2px; }
+  .layer.on { border-color:#fff; background:#2a3142; }
+  .layer.on b { color:#fff; }
+  .cell.on.done { opacity:.75; }
+  .side { background:var(--panel); border:1px solid var(--line); border-top:5px solid #fff; border-radius:8px; padding:16px; align-self:start; position:sticky; top:20px; }
+  .side h2 { margin:0 0 10px; font-size:18px; }
+  .side ul { margin:0; padding-left:16px; font-size:13.5px; }
+  .side li { margin:4px 0; }
+  .side .detail { margin-top:14px; padding-top:12px; border-top:1px solid var(--line); font-size:13.5px; color:#c9cfdb; }
+  .foot { color:var(--muted); margin-top:16px; font-size:14px; }
+  .controls { margin-top:14px; display:flex; gap:8px; flex-wrap:wrap; }
+  button { background:#232b3b; color:var(--text); border:1px solid var(--line); border-radius:6px; padding:6px 12px; cursor:pointer; font:inherit; font-size:13px; }
+  button:hover { background:#2d3749; }
+  a { color:#7fb2ff; }
+  @media (max-width:900px){ .layout{grid-template-columns:1fr} .side{position:static} .grid{grid-template-columns:90px repeat(5,minmax(110px,1fr)); overflow-x:auto} }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Security Engineer Paths × Layers <span style="color:var(--muted);font-weight:500">(V1 → V8)</span></h1>
+  <p class="sub">Click a layer to stack it. Columns are specialization paths, rows are maturity layers.</p>
+  <div class="layout">
+    <div>
+      <div class="grid" id="grid"></div>
+      <div class="controls">
+        <button id="prev">◀ Previous layer</button>
+        <button id="next">Next layer ▶</button>
+        <button id="play">▶ Play V1 → V8</button>
+      </div>
+      <p class="foot">Bottom-up: each layer builds on the one below. Built by <a href="https://github.com/mail2ramya17">Ramya Kanderi</a>.</p>
+    </div>
+    <aside class="side" id="side"></aside>
+  </div>
+</div>
+<script>
+let data, current = 0, timer = null;
+const grid = document.getElementById('grid'), side = document.getElementById('side');
+
+function hex2rgba(h, a) { const n = parseInt(h.slice(1),16); return `rgba(${n>>16},${(n>>8)&255},${n&255},${a})`; }
+
+function render(selectedPath) {
+  grid.innerHTML = '<div></div>';
+  data.paths.forEach(p => {
+    const d = document.createElement('div');
+    d.className = 'head'; d.textContent = p.name;
+    d.style.borderColor = p.color; d.style.background = hex2rgba(p.color,.22);
+    grid.appendChild(d);
+  });
+  [...data.layers].reverse().forEach(layer => {
+    const idx = data.layers.indexOf(layer);
+    const l = document.createElement('div');
+    l.className = 'layer' + (idx === current ? ' on' : '');
+    l.innerHTML = `<b>${layer.id}</b><span>${layer.name}</span>`;
+    l.onclick = () => { stop(); current = idx; render(); };
+    grid.appendChild(l);
+    data.paths.forEach(p => {
+      const c = document.createElement('div');
+      const lit = idx <= current;
+      c.className = 'cell' + (lit ? ' on' : '') + (lit && idx < current ? ' done' : '');
+      c.textContent = layer.cells[p.id];
+      if (lit) { c.style.borderColor = p.color; c.style.background = hex2rgba(p.color, idx === current ? .28 : .14); }
+      c.onclick = () => { stop(); current = idx; render(p.id); };
+      grid.appendChild(c);
+    });
+  });
+  const L = data.layers[current];
+  let html = `<h2>${L.id} · ${L.name}</h2><ul>${L.summary.map(s=>`<li>${s}</li>`).join('')}</ul>`;
+  if (selectedPath) {
+    const p = data.paths.find(x => x.id === selectedPath);
+    html += `<div class="detail"><b style="color:${p.color}">${p.name}</b><br>${L.cells[p.id]}</div>`;
+  }
+  side.innerHTML = html;
+}
+
+function stop() { if (timer) { clearInterval(timer); timer = null; document.getElementById('play').textContent = '▶ Play V1 → V8'; } }
+document.getElementById('prev').onclick = () => { stop(); current = Math.max(0, current-1); render(); };
+document.getElementById('next').onclick = () => { stop(); current = Math.min(data.layers.length-1, current+1); render(); };
+document.getElementById('play').onclick = (e) => {
+  if (timer) return stop();
+  current = 0; render(); e.target.textContent = '⏸ Pause';
+  timer = setInterval(() => { if (current >= data.layers.length-1) return stop(); current++; render(); }, 1400);
+};
+
+fetch('data/roadmap.json').then(r => r.json()).then(j => { data = j; render(); })
+  .catch(() => { grid.outerHTML = '<p>Could not load data/roadmap.json. Open via GitHub Pages or run <code>python3 -m http.server</code> in this folder.</p>'; });
+</script>
+</body>
+</html>

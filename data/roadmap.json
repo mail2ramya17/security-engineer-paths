@@ -1,0 +1,100 @@
+{
+  "title": "Security Engineer Paths × Layers (V1 → V8)",
+  "paths": [
+    { "id": "appsec", "name": "AppSec", "color": "#3b82f6" },
+    { "id": "cloud", "name": "Cloud Security", "color": "#14b8a6" },
+    { "id": "devsecops", "name": "DevSecOps", "color": "#f59e0b" },
+    { "id": "offensive", "name": "Offensive / Red", "color": "#ef4444" },
+    { "id": "defensive", "name": "Defensive / Blue", "color": "#8b5cf6" }
+  ],
+  "layers": [
+    {
+      "id": "V1", "name": "Foundations",
+      "summary": ["Networking, OS, scripting", "Crypto & web fundamentals", "Every path starts here"],
+      "cells": {
+        "appsec": "HTTP, TLS, OWASP Top 10",
+        "cloud": "Linux, TCP/IP, DNS, subnets",
+        "devsecops": "Git, Bash, Python basics",
+        "offensive": "Networking, recon basics",
+        "defensive": "Logs, SIEM basics"
+      }
+    },
+    {
+      "id": "V2", "name": "Secure Build",
+      "summary": ["Write and review code safely", "Least privilege by default", "Catch secrets before they ship"],
+      "cells": {
+        "appsec": "Secure code review",
+        "cloud": "IAM basics, least privilege",
+        "devsecops": "Pre-commit, secret scanning",
+        "offensive": "Web vuln fundamentals",
+        "defensive": "Alert triage, playbooks"
+      }
+    },
+    {
+      "id": "V3", "name": "Test & Automate",
+      "summary": ["Automate the checks you did by hand", "Shift security into CI", "Measure posture continuously"],
+      "cells": {
+        "appsec": "SAST / DAST — Semgrep, ZAP",
+        "cloud": "CSPM posture — Prowler, Wiz",
+        "devsecops": "CI security gates",
+        "offensive": "Burp Suite, fuzzing",
+        "defensive": "SOAR automation"
+      }
+    },
+    {
+      "id": "V4", "name": "Cloud & Platform",
+      "summary": ["Secure the platform apps run on", "Guardrails over gatekeeping", "Infrastructure is code — scan it"],
+      "cells": {
+        "appsec": "API security, authZ testing",
+        "cloud": "AWS/Azure/GCP guardrails, SCPs",
+        "devsecops": "IaC scanning — Checkov, tfsec",
+        "offensive": "Cloud pentest, misconfigs",
+        "defensive": "CloudTrail, flow logs"
+      }
+    },
+    {
+      "id": "V5", "name": "Supply Chain",
+      "summary": ["Know what you ship", "Prove where artifacts came from", "Harden containers and clusters"],
+      "cells": {
+        "appsec": "SCA, SBOM, license risk",
+        "cloud": "EKS/AKS/GKE, K8s hardening",
+        "devsecops": "SLSA, Sigstore, image signing",
+        "offensive": "Container breakout tests",
+        "defensive": "Runtime — Falco, eBPF"
+      }
+    },
+    {
+      "id": "V6", "name": "Identity & Zero Trust",
+      "summary": ["Identity is the new perimeter", "Never trust, always verify", "Protect secrets and keys"],
+      "cells": {
+        "appsec": "OAuth2 / OIDC flaws, sessions",
+        "cloud": "Zero-trust network, mTLS",
+        "devsecops": "Secrets mgmt — Vault, KMS",
+        "offensive": "AD / identity attack paths",
+        "defensive": "IdP & UEBA monitoring"
+      }
+    },
+    {
+      "id": "V7", "name": "Threat-Led Engineering",
+      "summary": ["Design from the attacker's view", "Encode policy, don't document it", "Detections as code"],
+      "cells": {
+        "appsec": "Threat modeling — STRIDE, PASTA",
+        "cloud": "Cloud detection — GuardDuty",
+        "devsecops": "Policy-as-code — OPA, Kyverno",
+        "offensive": "Red team ops, ATT&CK",
+        "defensive": "Detection eng. — Sigma, KQL"
+      }
+    },
+    {
+      "id": "V8", "name": "Architecture & AI",
+      "summary": ["Own the security architecture", "Secure LLM and AI systems", "Lead programs, not just tickets"],
+      "cells": {
+        "appsec": "LLM / AI app security",
+        "cloud": "Multi-cloud security architecture",
+        "devsecops": "Security platform engineering",
+        "offensive": "Adversary emulation, AI red teaming",
+        "defensive": "IR lead, security program strategy"
+      }
+    }
+  ]
+}
